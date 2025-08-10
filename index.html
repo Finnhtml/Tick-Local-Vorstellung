@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TickLocal Präsentation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+      min-height: 100vh;
+      color: #333;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .main-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      text-align: center;
+      /* wichtig: erlauben, dass Kinder sichtbar bleiben (nicht clippen) */
+      overflow: visible;
+    }
+
+    /* FIX: verhindert dass Buchstaben abgeschnitten werden */
+    .logo {
+      font-size: 3.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2rem;
+      display: inline-block;
+      line-height: 1.05; /* mehr Platz für die Glyphen */
+      padding: 0.25rem 0; /* verhindert Abschneiden an oben/unten */
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .tagline {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1.5rem;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-desc {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    .section-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+    }
+
+    .privacy-highlight {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .privacy-highlight h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .disclaimer {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      color: #dc2626;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Passwort-Overlay */
+    #password-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #password-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    #password-box h2 {
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      color: #374151;
+    }
+
+    #password-input {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    #password-submit {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    #password-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .main-card, .section-card {
+        padding: 2rem;
+      }
+
+      .logo {
+        font-size: 2.5rem;
+        line-height: 1.05;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Passwortschutz-Overlay -->
+  <div id="password-overlay">
+    <div id="password-box">
+      <h2>🔒 Passwort eingeben</h2>
+      <input type="password" id="password-input" placeholder="Passwort">
+      <br>
+      <button id="password-submit">Freischalten</button>
+      <p id="password-error" style="color:red; display:none; margin-top:0.5rem;">Falsches Passwort!</p>
+    </div>
+  </div>
+
+  <!-- Eigentliche Website -->
+  <div id="site-content" style="display:none;">
+    <div class="container">
+      <div class="main-card">
+        <div class="logo">TickLocal</div>
+        <div class="tagline">100% offline, 100% kostenlos.</div>
+        <div class="description">
+          Deine Daten gehören dir. Keine Cloud, kein Tracking, kein Backendserver.
+        </div>
+        
+        <div class="features">
+          <div class="feature-card">
+            <div class="feature-icon">🎫</div>
+            <div class="feature-title">Event erstellen</div>
+            <div class="feature-desc">Schnell und einfach Events anlegen</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💾</div>
+            <div class="feature-title">Tickets</div>
+            <div class="feature-desc">Sichere lokale Speicherung</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <div class="feature-title">Speichern / Laden</div>
+            <div class="feature-desc">Einfacher Import und Export</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📷</div>
+            <div class="feature-title">Scanner</div>
+            <div class="feature-desc">QR-Code Scanning ohne App</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2 class="section-title">
+          🚀 Jetzt ausprobieren
+        </h2>
+        <p style="margin-bottom: 2rem; color: #6b7280; text-align: center;">
+          TickLocal ist eine <strong>komplett kostenlose und datenfreundliche Lösung</strong> für Events.<br>
+          Es funktioniert ohne Registrierung oder Internetverbindung.
+        </p>
+        <div style="text-align: center;">
+          <a class="cta-button" href="https://finnhtml.github.io/checkinlokal1/" target="_blank">
+            🔗 Zur aktuellen Testversion
+          </a>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="privacy-highlight">
+          <h3>🔒 100% Datenschutz</h3>
+          <p>TickLocal speichert alle Daten nur in deinem Browser – <strong>es werden keine Daten übertragen</strong>.</p>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <strong>⚠️ Wichtiger Hinweis:</strong> Dieses Projekt befindet sich in Entwicklung. Es wird <strong>keine Haftung</strong> für fehlerhafte Funktion oder verlorene Daten übernommen.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("password-submit").addEventListener("click", function() {
+      const entered = document.getElementById("password-input").value;
+      if (entered === "VorschauTick01") {
+        document.getElementById("password-overlay").style.display = "none";
+        document.getElementById("site-content").style.display = "block";
+      } else {
+        document.getElementById("password-error").style.display = "block";
+      }
+    });
+
+    document.getElementById("password-input").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        document.getElementById("password-submit").click();
+      }
+    });
+  </script>
+
+</body>
+</html>
